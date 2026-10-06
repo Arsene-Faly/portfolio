@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import type { IconType } from "react-icons";
 import {
   HiArrowRight,

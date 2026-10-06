@@ -1,13 +1,9 @@
-import { Link } from "react-router-dom";
 import type { IconType } from "react-icons";
 import { HiArrowRight } from "react-icons/hi2";
 import {
   FaPython,
   FaReact,
-  FaHtml5,
-  FaCss3Alt,
   FaGitAlt,
-  FaNodeJs,
 } from "react-icons/fa6";
 import {
   SiDjango,
