@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/src/assets/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arsène portfolio</title>
+
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme") === "light" ? "light" : "dark";
+        var root = document.documentElement;
+        root.setAttribute("data-theme", t);
+        root.style.colorScheme = t;
+      })();
+    </script>
+
+    <style>
+      html[data-theme="dark"] { background: oklch(25.33% 0.016 252.42); }
+      html[data-theme="light"] { background: #ffffff; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
