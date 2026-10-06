@@ -218,7 +218,7 @@ function Header() {
           </a>
 
           {/* Burger mobile */}
-          <div ref={menuRef} className="relative lg:hidden">
+          <div ref={menuRef} className="relative hidden">
             <button
               type="button"
               onClick={() => setOpen((o) => !o)}
