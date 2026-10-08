@@ -9,6 +9,7 @@ import {
 } from "react-icons/hi2";
 import {
   FaCss3Alt,
+  FaDocker,
   FaGitAlt,
   FaGithub,
   FaHtml5,
@@ -22,6 +23,7 @@ import {
   SiFlutter,
   SiLaravel,
   SiMysql,
+  SiNextdotjs,
   SiPostgresql,
   SiQt,
   SiSqlite,
@@ -34,6 +36,19 @@ type Category = { title: string; icon: IconType; techs: Tech[] };
 
 const categories: Category[] = [
   {
+    title: "Frontend",
+    icon: HiOutlineComputerDesktop,
+
+    techs: [
+      { name: "CSS3", icon: FaCss3Alt, color: "text-[#1572B6]" },
+      { name: "HTML5", icon: FaHtml5, color: "text-[#E34F26]" },
+      { name: "React", icon: FaReact, color: "text-[#61DAFB]" },
+      { name: "Next.js", icon: SiNextdotjs, color: "text-base-content" },
+      { name: "Tailwind CSS", icon: SiTailwindcss, color: "text-[#06B6D4]" },
+      { name: "TypeScript", icon: SiTypescript, color: "text-[#3178C6]" },
+    ],
+  },
+  {
     title: "Backend", // 5
     icon: HiOutlineServerStack,
     techs: [
@@ -42,17 +57,6 @@ const categories: Category[] = [
       { name: "Laravel", icon: SiLaravel, color: "text-[#FF2D20]" },
       { name: "PHP", icon: FaPhp, color: "text-[#777BB4]" },
       { name: "Python", icon: FaPython, color: "text-[#3776AB]" },
-    ],
-  },
-  {
-    title: "Frontend", // 5
-    icon: HiOutlineComputerDesktop,
-    techs: [
-      { name: "CSS3", icon: FaCss3Alt, color: "text-[#1572B6]" },
-      { name: "HTML5", icon: FaHtml5, color: "text-[#E34F26]" },
-      { name: "React", icon: FaReact, color: "text-[#61DAFB]" },
-      { name: "Tailwind CSS", icon: SiTailwindcss, color: "text-[#06B6D4]" },
-      { name: "TypeScript", icon: SiTypescript, color: "text-[#3178C6]" },
     ],
   },
   {
@@ -65,11 +69,13 @@ const categories: Category[] = [
     ],
   },
   {
-    title: "Outils", // 2
+    title: "Outils et DevOps",
     icon: HiOutlineWrenchScrewdriver,
+
     techs: [
       { name: "Git", icon: FaGitAlt, color: "text-[#F05032]" },
       { name: "GitHub", icon: FaGithub, color: "text-base-content" },
+      { name: "Docker", icon: FaDocker, color: "text-[#2496ED]" },
     ],
   },
   {
@@ -82,7 +88,6 @@ const categories: Category[] = [
     icon: HiOutlineWindow,
     techs: [{ name: "PyQt", icon: SiQt, color: "text-[#41CD52]" }],
   },
-  
 ];
 
 function Skills() {

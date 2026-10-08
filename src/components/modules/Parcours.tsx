@@ -54,7 +54,7 @@ const formations: TimelineItem[] = [
   {
     title: "Formation en développement web",
     organization: "HOPES FORMATION, Andavamamba",
-    period: "2025 (6 mois)",
+    period: "2025 (8 mois)",
     description:
       "Apprentissage pratique des technologies front-end et back-end pour la conception et la réalisation de projets web modernes et performants.",
     tags: ["HTML", "CSS", "JavaScript", "PHP", "Laravel", "Vue JS"],
