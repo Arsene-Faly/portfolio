@@ -1,37 +1,35 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-
 import {
   HiArrowRight,
-  HiChevronLeft,
-  HiChevronRight,
+  HiArrowDownTray,
   HiOutlineGlobeAlt,
+  HiOutlineComputerDesktop,
+  HiOutlineDevicePhoneMobile,
 } from "react-icons/hi2";
-
 import { FaGithub } from "react-icons/fa6";
+import type { IconType } from "react-icons";
 
-type ProjectType = "Web" | "Mobile" | "Desktop" | "Application";
+type ProjectType = "Web" | "Mobile" | "Desktop";
 
 type Project = {
   title: string;
   description: string;
   type: ProjectType;
   tags: string[];
-  image: string;
   github?: string;
   demo?: string;
+  download?: string; // lien de téléchargement de l'app (Mobile)
 };
-
-const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80";
-
-const GAP = 24;
-const DRAG_THRESHOLD = 5;
 
 const typeBadge: Record<ProjectType, string> = {
   Web: "badge-primary",
-  Mobile: "badge-secondary",
+  Mobile: "badge-success",
   Desktop: "badge-accent",
-  Application: "badge-success",
+};
+
+const typeIcon: Record<ProjectType, IconType> = {
+  Web: HiOutlineGlobeAlt,
+  Mobile: HiOutlineDevicePhoneMobile,
+  Desktop: HiOutlineComputerDesktop,
 };
 
 const projects: Project[] = [
@@ -39,11 +37,28 @@ const projects: Project[] = [
     title: "Jeu Fanorona",
     description:
       "Jeu traditionnel malagasy Fanorona développé avec Flutter et Dart, avec une interface interactive et une gestion des règles du jeu.",
-    type: "Application",
+    type: "Mobile",
     tags: ["Flutter", "Dart"],
-    image:
-      "https://commons.wikimedia.org/wiki/Special:Redirect/file/Fanorona-with-pieces.png",
     github: "https://github.com/Arsene-Faly/Fanorona",
+    download: "https://github.com/Arsene-Faly/Fanorona/releases/latest", // à remplacer par ton lien APK
+  },
+  {
+    title: "Gestion budgétaire Mobile",
+    description:
+      "Application mobile de gestion budgétaire permettant de suivre les revenus, les dépenses et les catégories depuis son téléphone.",
+    type: "Mobile",
+    tags: ["Flutter", "Dart", "SQLite"], // à adapter à ta vraie stack
+    github: "https://github.com/Arsene-Faly/budget_app",
+    download: "https://github.com/Arsene-Faly/budget_app/releases/latest", // à remplacer par ton lien APK
+  },
+  {
+    title: "Gestion de tâches",
+    description:
+      "Application de gestion de tâches permettant de créer, organiser et suivre ses tâches au quotidien.",
+    type: "Mobile",
+    tags: ["Flutter", "Dart"], // à adapter à ta vraie stack
+    github: "https://github.com/Arsene-Faly/task_app",
+    download: "https://github.com/Arsene-Faly/task_app/releases/latest", // à remplacer par ton lien APK
   },
   {
     title: "Mini Gestion École",
@@ -51,8 +66,6 @@ const projects: Project[] = [
       "Application web de gestion scolaire permettant de gérer les élèves, les classes et les informations administratives.",
     type: "Web",
     tags: ["PHP", "Tailwind CSS", "JavaScript"],
-    image:
-      "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80",
     github: "https://github.com/Arsene-Faly/MINI_GESTION_ECOLE",
   },
   {
@@ -61,8 +74,6 @@ const projects: Project[] = [
       "Application web permettant de créer, personnaliser et générer facilement un CV professionnel.",
     type: "Web",
     tags: ["Next.js", "Tailwind CSS", "DaisyUI"],
-    image:
-      "https://images.unsplash.com/photo-1586282391129-76a6df230234?auto=format&fit=crop&w=800&q=80",
     github: "https://github.com/Arsene-Faly/cv_generator",
     demo: "https://cv-generator-snowy.vercel.app/",
   },
@@ -72,8 +83,6 @@ const projects: Project[] = [
       "Application web permettant de gérer les revenus et les dépenses, avec un suivi des opérations et des catégories.",
     type: "Web",
     tags: ["Django", "JavaScript"],
-    image:
-      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80",
     github: "https://github.com/Arsene-Faly/gestionbudgetaire",
   },
   {
@@ -82,265 +91,104 @@ const projects: Project[] = [
       "Site responsive avec mode clair et sombre, construit avec une stack moderne.",
     type: "Web",
     tags: ["React", "TypeScript", "DaisyUI"],
-    image:
-      "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80",
     github: "https://github.com/Arsene-Faly/portfolio",
-    // Ajoute `demo: "https://ton-domaine.com"` quand le site est en ligne
   },
 ];
 
 function Projects() {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number | null>(null);
-  const drag = useRef({
-    active: false,
-    pointerId: -1,
-    startX: 0,
-    startLeft: 0,
-    moved: false,
-  });
-
-  const [canPrev, setCanPrev] = useState(false);
-  const [canNext, setCanNext] = useState(false);
-  const [dragging, setDragging] = useState(false);
-
-  // Met à jour l'état des boutons (throttlé avec requestAnimationFrame)
-  const updateButtons = useCallback(() => {
-    if (rafRef.current !== null) return;
-
-    rafRef.current = requestAnimationFrame(() => {
-      rafRef.current = null;
-
-      const track = trackRef.current;
-      if (!track) return;
-
-      const maxScroll = track.scrollWidth - track.clientWidth;
-
-      setCanPrev(track.scrollLeft > 4);
-      setCanNext(track.scrollLeft < maxScroll - 4);
-    });
-  }, []);
-
-  // Défile d'une carte vers la gauche ou la droite
-  const moveSlider = useCallback((direction: "prev" | "next") => {
-    const track = trackRef.current;
-    const card = track?.firstElementChild as HTMLElement | null;
-
-    if (!track || !card) return;
-
-    const step = card.getBoundingClientRect().width + GAP;
-
-    track.scrollBy({
-      left: direction === "next" ? step : -step,
-      behavior: "smooth",
-    });
-  }, []);
-
-  // Navigation clavier
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "ArrowRight") {
-      e.preventDefault();
-      moveSlider("next");
-    } else if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      moveSlider("prev");
-    }
-  };
-
-  // --- Drag SOURIS uniquement (le tactile utilise le scroll natif) ---
-  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    const track = trackRef.current;
-    if (!track) return;
-    if (e.pointerType !== "mouse" || e.button !== 0) return;
-
-    drag.current = {
-      active: true,
-      pointerId: e.pointerId,
-      startX: e.clientX,
-      startLeft: track.scrollLeft,
-      moved: false,
-    };
-  };
-
-  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    const track = trackRef.current;
-    const d = drag.current;
-    if (!d.active || !track || e.pointerId !== d.pointerId) return;
-
-    const dx = e.clientX - d.startX;
-
-    if (!d.moved) {
-      if (Math.abs(dx) < DRAG_THRESHOLD) return;
-      d.moved = true;
-      setDragging(true);
-      track.style.scrollSnapType = "none"; // pas de snap pendant le drag
-      track.setPointerCapture(e.pointerId); // capture seulement après un vrai drag
-    }
-
-    track.scrollLeft = d.startLeft - dx;
-  };
-
-  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
-    const track = trackRef.current;
-    const d = drag.current;
-    if (!d.active || !track || e.pointerId !== d.pointerId) return;
-
-    d.active = false;
-    setDragging(false);
-    track.style.scrollSnapType = ""; // réactive le snap
-
-    if (track.hasPointerCapture(e.pointerId)) {
-      track.releasePointerCapture(e.pointerId);
-    }
-  };
-
-  // Empêche le clic sur un lien juste après un drag souris
-  const onClickCapture = (e: React.MouseEvent) => {
-    if (drag.current.moved) {
-      e.preventDefault();
-      e.stopPropagation();
-      drag.current.moved = false;
-    }
-  };
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    updateButtons();
-
-    // Recalcule quand la taille du slider ou des cartes change
-    const observer = new ResizeObserver(updateButtons);
-    observer.observe(track);
-    Array.from(track.children).forEach((child) => observer.observe(child));
-
-    return () => {
-      observer.disconnect();
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-    };
-  }, [updateButtons]);
-
   return (
-    <section id="projets" className="border-t border-base-300 bg-base-200/60">
+    <section id="projets" className="border-t border-base-300 bg-base-200/60 cursor-pointer">
       <div className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
         {/* En-tête */}
         <div className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">
             Projets
           </p>
-
           <h2 className="text-4xl font-extrabold tracking-tight text-base-content sm:text-5xl">
             Mes <span className="text-primary">réalisations</span>
           </h2>
-
           <p className="mt-5 text-lg font-medium text-base-content/80 sm:text-xl">
             Quelques projets récents.
           </p>
         </div>
 
-        {/* Slider */}
-        <div
-          ref={trackRef}
-          onScroll={updateButtons}
-          onKeyDown={handleKeyDown}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={endDrag}
-          onPointerCancel={endDrag}
-          onClickCapture={onClickCapture}
-          tabIndex={0}
-          role="region"
-          aria-label="Liste des projets"
-          style={{ touchAction: "pan-x pan-y" }}
-          className={`
-            mt-12 flex w-full gap-6
-            overflow-x-auto overflow-y-hidden
-            overscroll-x-contain
-            snap-x snap-mandatory scroll-px-1
-            px-1 pb-8 pt-2
-            outline-none
-            [scrollbar-width:none]
-            [&::-webkit-scrollbar]:hidden
-            ${dragging ? "cursor-grabbing select-none" : "md:cursor-grab"}
-          `}
-        >
+        {/* Grille */}
+        <div className="mt-12 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map(
-            ({ title, description, type, tags, image, github, demo }) => (
-              <article
-                key={title}
-                className="
-                  group relative h-[26rem] w-[85%] shrink-0 snap-start
-                  overflow-hidden rounded-2xl
-                  border border-base-300 bg-neutral shadow-md
-                  transition-shadow duration-300
-                  hover:border-primary/50 hover:shadow-2xl
-                  sm:w-[22rem]
-                "
-              >
-                {/* Image */}
-                <img
-                  src={image}
-                  alt={`Aperçu du projet ${title}`}
-                  loading="lazy"
-                  draggable={false}
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = FALLBACK_IMAGE;
-                  }}
+            (
+              { title, description, type, tags, github, demo, download },
+              index,
+            ) => {
+              const Icon = typeIcon[type];
+              const hasDownload = type === "Mobile" && !!download;
+
+              return (
+                <article
+                  key={title}
                   className="
-                    pointer-events-none absolute inset-0 h-full w-full object-cover
-                    transition-transform duration-500
-                    group-hover:scale-110
+                    group relative flex h-full flex-col gap-4 overflow-hidden
+                    rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm
+                    transition-all duration-300
+                    hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl
                   "
-                />
-
-                {/* Dégradé */}
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-neutral via-neutral/70 to-transparent" />
-
-                {/* Badge */}
-                <span
-                  className={`badge absolute left-4 top-4 font-semibold shadow ${typeBadge[type]}`}
                 >
-                  {type}
-                </span>
+                  {/* Barre d'accent */}
+                  <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
 
-                {/* Contenu */}
-                <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-5 text-neutral-content">
-                  <h3 className="text-xl font-bold leading-tight">{title}</h3>
+                  {/* Haut : icône + numéro */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <span className="text-3xl font-black text-base-content/10">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </div>
 
-                  <p className="text-sm text-neutral-content/85">
+                  {/* Titre + badge : hauteur fixe (2 lignes max) */}
+                  <div className="flex min-h-[3.5rem] items-start justify-between gap-2">
+                    <h3
+                      title={title}
+                      className="line-clamp-2 text-xl font-bold leading-tight text-base-content"
+                    >
+                      {title}
+                    </h3>
+                    <span
+                      className={`badge badge-sm mt-1 shrink-0 font-semibold ${typeBadge[type]}`}
+                    >
+                      {type}
+                    </span>
+                  </div>
+
+                  {/* Description : max 3 lignes, prend l'espace restant */}
+                  <p
+                    title={description}
+                    className="line-clamp-3 min-h-[4.25rem] flex-1 text-sm leading-relaxed text-base-content/70"
+                  >
                     {description}
                   </p>
 
-                  <ul className="flex flex-wrap gap-2">
+                  {/* Tags : hauteur réservée pour 2 lignes */}
+                  <ul className="flex min-h-[3.75rem] flex-wrap content-start gap-2">
                     {tags.map((tag) => (
                       <li
                         key={tag}
-                        className="
-                          rounded-full border border-neutral-content/20
-                          bg-neutral-content/10 px-3 py-1
-                          text-xs font-medium backdrop-blur-sm
-                        "
+                        className="h-fit rounded-full border border-base-300 bg-base-200 px-3 py-1 text-xs font-medium text-base-content/80"
                       >
                         {tag}
                       </li>
                     ))}
                   </ul>
 
-                  {(github || demo) && (
-                    <div className="flex items-center gap-2 pt-1">
+                  {/* Liens : toujours en bas */}
+                  {(github || demo || hasDownload) && (
+                    <div className="flex flex-wrap items-center gap-2 border-t border-base-300 pt-4">
                       {github && (
                         <a
                           href={github}
                           target="_blank"
                           rel="noreferrer"
-                          draggable={false}
-                          className="
-                            btn btn-outline btn-sm rounded-full px-5
-                            border-neutral-content/40 text-neutral-content
-                            hover:border-neutral-content
-                            hover:bg-neutral-content hover:text-neutral
-                          "
+                          className="btn btn-outline btn-sm rounded-full px-5"
                         >
                           <FaGithub className="h-4 w-4" />
                           Code
@@ -352,43 +200,31 @@ function Projects() {
                           href={demo}
                           target="_blank"
                           rel="noreferrer"
-                          draggable={false}
-                          className="btn btn-primary btn-sm group rounded-full px-5"
+                          className="btn btn-primary btn-sm group/btn rounded-full px-5"
                         >
                           <HiOutlineGlobeAlt className="h-4 w-4" />
                           Voir en ligne
-                          <HiArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                          <HiArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+                        </a>
+                      )}
+
+                      {hasDownload && (
+                        <a
+                          href={download}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="btn btn-success btn-sm rounded-full px-5"
+                        >
+                          <HiArrowDownTray className="h-4 w-4" />
+                          Télécharger l'app
                         </a>
                       )}
                     </div>
                   )}
-                </div>
-              </article>
-            ),
+                </article>
+              );
+            },
           )}
-        </div>
-
-        {/* Boutons (desktop) */}
-        <div className="mt-2 hidden justify-center gap-3 md:flex">
-          <button
-            type="button"
-            onClick={() => moveSlider("prev")}
-            disabled={!canPrev}
-            aria-label="Projet précédent"
-            className="btn btn-circle btn-outline active:scale-95"
-          >
-            <HiChevronLeft className="h-5 w-5" />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => moveSlider("next")}
-            disabled={!canNext}
-            aria-label="Projet suivant"
-            className="btn btn-circle btn-primary active:scale-95"
-          >
-            <HiChevronRight className="h-5 w-5" />
-          </button>
         </div>
       </div>
     </section>

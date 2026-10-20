@@ -4,7 +4,6 @@ import {
   HiOutlineCodeBracket,
   HiOutlineDevicePhoneMobile,
   HiOutlineCircleStack,
-  HiOutlineAcademicCap,
 } from "react-icons/hi2";
 
 type Service = { title: string; text: string; icon: IconType };
@@ -24,11 +23,6 @@ const services: Service[] = [
     title: "Modélisation BDD",
     text: "Des bases de données claires et performantes.",
     icon: HiOutlineCircleStack,
-  },
-  {
-    title: "Formation",
-    text: "Python base...",
-    icon: HiOutlineAcademicCap,
   },
 ];
 
@@ -51,17 +45,31 @@ function About() {
         </div>
 
         {/* Cartes */}
-        <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 cursor-pointer">
+        <ul className="mt-12 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 cursor-pointer">
           {services.map(({ title, text, icon: Icon }) => (
             <li
               key={title}
-              className="group flex flex-col items-center rounded-2xl border border-base-300 bg-base-100 p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:shadow-xl"
+              className="group flex h-full flex-col items-center rounded-2xl border border-base-300 bg-base-100 p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:shadow-xl"
             >
-              <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-content">
+              <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-content">
                 <Icon className="h-8 w-8" />
               </span>
-              <h3 className="mt-5 text-xl font-bold">{title}</h3>
-              <p className="mt-2 text-base text-base-content/80">{text}</p>
+
+              {/* Titre : hauteur fixe (2 lignes max) */}
+              <h3
+                title={title}
+                className="mt-5 flex min-h-[3.5rem] items-center justify-center text-xl font-bold leading-tight"
+              >
+                <span className="line-clamp-2">{title}</span>
+              </h3>
+
+              {/* Texte : hauteur fixe (3 lignes max) */}
+              <p
+                title={text}
+                className="mt-2 line-clamp-3 min-h-[4.5rem] flex-1 text-base text-base-content/80"
+              >
+                {text}
+              </p>
             </li>
           ))}
         </ul>

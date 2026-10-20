@@ -13,11 +13,14 @@ import {
   FaGitAlt,
   FaGithub,
   FaHtml5,
+  FaJs,
+  FaNodeJs,
   FaPhp,
   FaPython,
   FaReact,
 } from "react-icons/fa6";
 import {
+  SiDiagramsdotnet,
   SiDjango,
   SiFlask,
   SiFlutter,
@@ -25,11 +28,14 @@ import {
   SiMysql,
   SiNextdotjs,
   SiPostgresql,
+  SiPostman,
   SiQt,
   SiSqlite,
   SiTailwindcss,
   SiTypescript,
 } from "react-icons/si";
+
+import { VscVscode } from "react-icons/vsc";
 
 type Tech = { name: string; icon: IconType; color: string };
 type Category = { title: string; icon: IconType; techs: Tech[] };
@@ -42,6 +48,7 @@ const categories: Category[] = [
     techs: [
       { name: "CSS3", icon: FaCss3Alt, color: "text-[#1572B6]" },
       { name: "HTML5", icon: FaHtml5, color: "text-[#E34F26]" },
+      { name: "JavaScript", icon: FaJs, color: "text-[#F7DF1E]" },
       { name: "React", icon: FaReact, color: "text-[#61DAFB]" },
       { name: "Next.js", icon: SiNextdotjs, color: "text-base-content" },
       { name: "Tailwind CSS", icon: SiTailwindcss, color: "text-[#06B6D4]" },
@@ -57,15 +64,7 @@ const categories: Category[] = [
       { name: "Laravel", icon: SiLaravel, color: "text-[#FF2D20]" },
       { name: "PHP", icon: FaPhp, color: "text-[#777BB4]" },
       { name: "Python", icon: FaPython, color: "text-[#3776AB]" },
-    ],
-  },
-  {
-    title: "Bases de données", // 3
-    icon: HiOutlineCircleStack,
-    techs: [
-      { name: "MySQL", icon: SiMysql, color: "text-[#4479A1]" },
-      { name: "PostgreSQL", icon: SiPostgresql, color: "text-[#4169E1]" },
-      { name: "SQLite", icon: SiSqlite, color: "text-[#44A5D8]" },
+      { name: "Node.js", icon: FaNodeJs, color: "text-[#5FA04E]" },
     ],
   },
   {
@@ -76,6 +75,18 @@ const categories: Category[] = [
       { name: "Git", icon: FaGitAlt, color: "text-[#F05032]" },
       { name: "GitHub", icon: FaGithub, color: "text-base-content" },
       { name: "Docker", icon: FaDocker, color: "text-[#2496ED]" },
+      { name: "VS Code", icon: VscVscode, color: "text-[#007ACC]" },
+      { name: "Postman", icon: SiPostman, color: "text-[#FF6C37]" },
+      { name: "draw.io", icon: SiDiagramsdotnet, color: "text-[#F08705]" },
+    ],
+  },
+  {
+    title: "Bases de données", // 3
+    icon: HiOutlineCircleStack,
+    techs: [
+      { name: "MySQL", icon: SiMysql, color: "text-[#4479A1]" },
+      { name: "PostgreSQL", icon: SiPostgresql, color: "text-[#4169E1]" },
+      { name: "SQLite", icon: SiSqlite, color: "text-[#44A5D8]" },
     ],
   },
   {

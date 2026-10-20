@@ -8,7 +8,7 @@ import Skills from "../components/modules/Skills";
 
 const Home = () => {
   return (
-    <main className="pb-20">
+    <main>
       <Hero />
       <About />
       <Skills />

@@ -13,6 +13,10 @@ import {
 const EMAIL = "arsenefaly1@gmail.com";
 const SUBJECT = "Prise de contact depuis ton portfolio";
 
+// Gmail dans un nouvel onglet (le site reste ouvert)
+const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}&su=${encodeURIComponent(SUBJECT)}`;
+
+// Secours : application de messagerie par défaut
 const mailtoLink = `mailto:${EMAIL}?subject=${encodeURIComponent(SUBJECT)}`;
 
 type Highlight = {
@@ -48,7 +52,7 @@ function Contact() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Le presse-papiers peut être indisponible : le mailto reste utilisable
+      // Le presse-papiers peut être indisponible : les liens restent utilisables
     }
   };
 
@@ -120,20 +124,28 @@ function Contact() {
             </p>
 
             <a
-              href={mailtoLink}
+              href={gmailLink}
+              target="_blank"
+              rel="noopener noreferrer"
               className="mt-2 block break-all text-2xl font-bold text-base-content transition-colors hover:text-primary sm:text-3xl"
             >
               {EMAIL}
             </a>
 
             <p className="mt-4 text-base leading-relaxed text-base-content/70">
-              Un clic ouvre votre application de messagerie avec un objet déjà
-              rempli. Il ne reste qu'à écrire votre message.
+              Un clic ouvre Gmail dans un nouvel onglet avec un objet déjà
+              rempli. Vous pouvez aussi{" "}
+              <a href={mailtoLink} className="link link-primary">
+                utiliser votre application de messagerie
+              </a>{" "}
+              ou copier l'adresse.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <a
-                href={mailtoLink}
+                href={gmailLink}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn btn-primary group rounded-full px-6"
               >
                 Envoyer un e-mail

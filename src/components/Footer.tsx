@@ -11,6 +11,8 @@ const EMAIL = "arsenefaly1@email.com";
 
 const links: FooterLink[] = [
   { href: "#accueil", label: "Accueil" },
+  { href: "#a-propos", label: "A Propos" },
+  { href: "#competences", label: "Compétences" },
   { href: "#projets", label: "Projets" },
   { href: "#parcours", label: "Parcours" },
   { href: "#contact", label: "Contact" },
