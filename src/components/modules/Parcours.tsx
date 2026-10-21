@@ -106,7 +106,7 @@ function Timeline({ heading, icon, items }: TimelineProps) {
               <span className="absolute -left-[9px] top-8 h-4 w-4 rounded-full border-4 border-base-100 bg-primary ring-2 ring-primary/30" />
 
               {/* Carte */}
-              <div className="flex h-full flex-col rounded-2xl border border-base-300 bg-base-200/60 p-6 shadow-sm transition-all duration-300 hover:border-primary/50 hover:shadow-lg">
+              <div className="flex h-full flex-col rounded-2xl border border-base-300 bg-base-100/70 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:shadow-lg">
                 {/* Période */}
                 <p className="flex items-center gap-2 text-sm font-semibold text-primary">
                   <HiOutlineCalendarDays className="h-5 w-5 shrink-0" />
@@ -155,7 +155,10 @@ function Timeline({ heading, icon, items }: TimelineProps) {
 
 function Parcours() {
   return (
-    <section id="parcours" className="border-t border-base-300 bg-base-100">
+    <section
+      id="parcours"
+      className="border-t border-base-300/60 bg-transparent"
+    >
       <div className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
         {/* En-tête */}
         <div className="mx-auto max-w-2xl text-center">
@@ -171,7 +174,7 @@ function Parcours() {
         </div>
 
         {/* Grid : 1 colonne sur mobile, 2 colonnes sur grand écran */}
-        <div className="mt-14 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-12 cursor-pointer">
+        <div className="mt-14 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-12">
           <Timeline
             heading="Parcours professionnel"
             icon={<HiOutlineBriefcase className="h-6 w-6" />}
