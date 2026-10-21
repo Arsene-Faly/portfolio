@@ -40,7 +40,7 @@ const projects: Project[] = [
     type: "Mobile",
     tags: ["Flutter", "Dart"],
     github: "https://github.com/Arsene-Faly/Fanorona",
-    download: "https://github.com/Arsene-Faly/Fanorona/releases/latest", // à remplacer par ton lien APK
+    download: "https://github.com/Arsene-Faly/Fanorona/releases/latest/download/app-arm64-v8a-release.apk",
   },
   {
     title: "Gestion budgétaire Mobile",
@@ -49,7 +49,7 @@ const projects: Project[] = [
     type: "Mobile",
     tags: ["Flutter", "Dart", "SQLite"], // à adapter à ta vraie stack
     github: "https://github.com/Arsene-Faly/budget_app",
-    download: "https://github.com/Arsene-Faly/budget_app/releases/latest", // à remplacer par ton lien APK
+    download: "https://github.com/Arsene-Faly/budget_app/releases/latest/download/app-release.apk",
   },
   {
     title: "Gestion de tâches",
@@ -58,7 +58,7 @@ const projects: Project[] = [
     type: "Mobile",
     tags: ["Flutter", "Dart"], // à adapter à ta vraie stack
     github: "https://github.com/Arsene-Faly/task_app",
-    download: "https://github.com/Arsene-Faly/task_app/releases/latest", // à remplacer par ton lien APK
+    download: "https://github.com/Arsene-Faly/task_app/releases/latest/download/app-release.apk",
   },
   {
     title: "Mini Gestion École",
