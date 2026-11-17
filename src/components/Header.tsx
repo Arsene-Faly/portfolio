@@ -36,6 +36,19 @@ const socials: Social[] = [
   },
 ];
 
+const mobileSocialLinks = socials.map(({ href, label, icon: Icon }) => (
+  <a
+    key={label}
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label={label}
+    className="btn btn-ghost btn-circle btn-sm"
+  >
+    <Icon className="h-5 w-5" />
+  </a>
+));
+
 // Ligne de référence sous le header : la section dont le haut l'a dépassée est active
 const OFFSET = 120;
 
@@ -148,7 +161,7 @@ function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+      className={`sticky top-0 z-[200] w-full transition-all duration-300 ${
         scrolled || open
           ? "border-b border-base-300 bg-base-100/80 shadow-sm backdrop-blur-md"
           : "border-b border-transparent bg-transparent"
@@ -218,7 +231,7 @@ function Header() {
           </a>
 
           {/* Burger mobile */}
-          <div ref={menuRef} className="relative hidden">
+          <div ref={menuRef} className="relative lg:hidden">
             <button
               type="button"
               onClick={() => setOpen((o) => !o)}
@@ -235,27 +248,30 @@ function Header() {
             </button>
 
             {open && (
-              <ul
+              <div
                 id="menu-mobile"
-                className="absolute right-0 top-full z-50 mt-3 flex w-56 flex-col gap-1 rounded-box border border-base-300 bg-base-100 p-3 shadow-lg"
+                className="fixed left-0 right-0 top-[64px] z-[9999] max-h-[calc(100dvh-64px)] overflow-y-auto border-t border-base-300 bg-base-100 p-4 shadow-2xl lg:hidden"
               >
-                {links.map(({ id, label, icon: Icon }) => (
-                  <li key={id}>
-                    <a
-                      href={`#${id}`}
-                      onClick={(e) => goTo(e, id)}
-                      aria-current={active === id ? "page" : undefined}
-                      className={linkClass(id)}
-                    >
-                      <Icon className="h-4 w-4" />
-                      {label}
-                    </a>
-                  </li>
-                ))}
-                <li className="mt-2 flex justify-center gap-2 border-t border-base-300 pt-3">
-                  {socialLinks}
-                </li>
-              </ul>
+                <ul className="flex flex-col gap-2">
+                  {links.map(({ id, label, icon: Icon }) => (
+                    <li key={id}>
+                      <a
+                        href={`#${id}`}
+                        onClick={(e) => goTo(e, id)}
+                        aria-current={active === id ? "page" : undefined}
+                        className={`${linkClass(id)} w-full`}
+                      >
+                        <Icon className="h-5 w-5" />
+                        {label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* <div className="mt-4 flex justify-center gap-3 border-t border-base-300 pt-4">
+                  {mobileSocialLinks}
+                </div> */}
+              </div>
             )}
           </div>
         </div>
